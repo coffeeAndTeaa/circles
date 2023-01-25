@@ -1,1 +1,140 @@
-<h1>sanity check</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>球球大作战</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+  </head>
+  <body>
+    <div id="container">
+      <div id="game-field" class="col-sm-12">
+        <canvas id="the-canvas" style="background: url('images/starfield.jpg')">
+          <!-- our drawing will go here -->
+        </canvas>
+        <div id="score-wrapper" class="hiddenOnStart" hidden>
+          <div>分数: <span class="player-score"></span></div>
+        </div>
+        <div id="leader-board-wrapper" class="hiddenOnStart" hidden>
+          <div id="leader-board">
+            <h3 class="text-center">排行榜</h3>
+            <hr />
+            <ol class="leader-board">
+              <li class="leaderboard-player"></li>
+            </ol>
+            <hr />
+          </div>
+          <div id="sort-wrapper">
+            <div id="sort-header" class="text-center">排序方式</div>
+            <div id="sort-score" class="sort-option active">分数</div>
+            <div id="sort-orbs" class="sort-option">宝石</div>
+            <div id="sort-players" class="sort-option">玩家</div>
+          </div>
+        </div>
+        <div id="game-message-wrapper">
+          <div id="game-message">{{gameMessage}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <h2 class="modal-title text-center">球球大作战</h2>
+          </div>
+          <div class="modal-body">
+            <!-- <button type="submit" class="btn play-button btn-github">
+              使用github 登录
+            </button> -->
+            <form class="name-form">
+              <div class="text-center error-message"></div>
+              <button type="submit" class="btn play-button play-guest">
+                开始游戏
+              </button>
+              <input
+                id="name-input"
+                class="text-input text-center form-control"
+                type="text"
+                name="name-input"
+                placeholder="请输入你的名字"
+                required
+              />
+            </form>
+          </div>
+          <div class="modal-footer">
+            <div id="instructions">
+              <label id="how-to-play">游戏规则:</label>
+              <ul>
+                <li>移动鼠标来控制球球的移动.</li>
+                <li>当球球触碰宝石时,可以吸收宝石,并变大</li>
+                <li>球球的速度与它的半径成反比.</li>
+                <li>游戏目标: 变大,并杀死比你小的其他玩家</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- START MODAL -->
+    <div id="spawnModal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <h2 class="modal-title text-center">球球大作战</h2>
+          </div>
+          <div class="modal-body">
+            <h3 class="text-center">
+              Hello, <span class="player-name"></span>!
+            </h3>
+            <div class="play-btn-wrapper">
+              <button
+                id="play-solo-btn"
+                type="button"
+                class="btn play-button start-game"
+              >
+                开始游戏
+              </button>
+          </div>
+          <div class="modal-footer">
+            <div id="instructions">
+              <label id="how-to-play">游戏规则:</label>
+              <ul>
+                <li>移动鼠标来控制球球的移动.</li>
+                <li>当球球触碰宝石时,可以吸收宝石,并变大</li>
+                <li>球球的速度与它的半径成反比.</li>
+                <li>游戏目标: 变大,并杀死比你小的其他玩家</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+      integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/uiStuff.js"></script>
+    <!-- <script src="/canvasStuff.js"></script>
+    <script src="/socketStuff.js"></script> -->
+  </body>
+</html>

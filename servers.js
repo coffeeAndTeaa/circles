@@ -1,3 +1,4 @@
+// 创建app 和 io这两个对象
 const express = require("express");
 const app = express();
 app.use(express.static(__dirname + "/public"));
