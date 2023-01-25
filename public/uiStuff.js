@@ -30,7 +30,3 @@ $(".start-game").click((event) => {
   // 当玩家点击开始游戏后，init函数被执行
   init();
 });
-
-function init() {
-  draw();
-}

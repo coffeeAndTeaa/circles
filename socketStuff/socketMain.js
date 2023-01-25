@@ -8,6 +8,7 @@ const PlayerData = require("./classes/PlayerData");
 const Player = require("./classes/Player");
 // ======================================================
 
+// 游戏的基础设置
 let settings = {
   defaultOrgs: 500,
   defaultSpeed: 6,
@@ -18,6 +19,8 @@ let settings = {
   worldHeight: 500,
 };
 
+let orbs = [];
+
 function initGame() {
   //创建宝石
   for (let i = 0; i < settings.defaultOrgs; i++) {
@@ -25,13 +28,19 @@ function initGame() {
   }
 }
 
-let orbs = [];
-
 initGame();
 
 io.sockets.on("connect", (socket) => {
-  socket.emit("init", {
-    orbs,
+  // 玩家已经连接到服务器了
+  socket.on("init", ({ playerName }) => {
+    // 服务器收到玩家发送的姓名,生成新的玩家
+    let playerConfig = new PlayerConfig(settings);
+    let playerData = new PlayerData(playerName, settings);
+    let palyer = new Player(socket.id, playerConfig, playerData);
+    // 服务器向玩家发送宝石信息
+    socket.emit("initReturn", {
+      orbs,
+    });
   });
 });
 
