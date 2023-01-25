@@ -1,0 +1,87 @@
+// ================================
+// =============DRAWING============
+// ================================
+player.locX = Math.floor(50 * Math.random() + 200);
+player.locY = Math.floor(50 * Math.random() + 200);
+
+// draw on the screen
+function draw() {
+  // 重置transform的值
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  // 重制画布
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 调整camera
+  const camX = -player.locX + canvas.width / 2;
+  const camY = -player.locY + canvas.height / 2;
+  // translate allows us to move the canvas around
+  context.translate(camX, camY);
+
+  // 绘制玩家
+  context.beginPath();
+  context.fillStyle = "rgb(0, 255, 0)";
+  context.arc(player.locX, player.locY, 19, 0, Math.PI * 2);
+  // context.arc(100, 100, 19, 0, Math.PI * 2);
+  context.fill();
+  context.lineWidth = 3;
+  context.strokeStyle = "rgb(0, 255, 0)";
+  context.stroke();
+
+  // 绘制所有的小球
+  orbs.forEach((orb) => {
+    context.beginPath();
+    context.fillStyle = orb.color;
+    context.arc(orb.locX, orb.locY, orb.radius, 0, Math.PI * 2);
+    context.fill();
+  });
+
+  requestAnimationFrame(draw);
+}
+
+// 监听鼠标的移动
+canvas.addEventListener("mousemove", (event) => {
+  const mousePosition = {
+    x: event.clientX,
+    y: event.clientY,
+  };
+  const angleDeg =
+    (Math.atan2(
+      mousePosition.y - canvas.height / 2,
+      mousePosition.x - canvas.width / 2
+    ) *
+      180) /
+    Math.PI;
+  if (angleDeg >= 0 && angleDeg < 90) {
+    // console.log("Mouse is in the lower right quad")
+    xVector = 1 - angleDeg / 90;
+    yVector = -(angleDeg / 90);
+  } else if (angleDeg >= 90 && angleDeg <= 180) {
+    // console.log("Mouse is in the lower left quad")
+    xVector = -(angleDeg - 90) / 90;
+    yVector = -(1 - (angleDeg - 90) / 90);
+  } else if (angleDeg >= -180 && angleDeg < -90) {
+    // console.log("Mouse is in the upper left quad")
+    xVector = (angleDeg + 90) / 90;
+    yVector = 1 + (angleDeg + 90) / 90;
+  } else if (angleDeg < 0 && angleDeg >= -90) {
+    // console.log("Mouse is in the upper right quad")
+    xVector = (angleDeg + 90) / 90;
+    yVector = 1 - (angleDeg + 90) / 90;
+  }
+
+  speed = 1;
+  xV = xVector;
+  yV = yVector;
+
+  if (
+    (player.locX < 5 && player.xVector < 0) ||
+    (player.locX > 500 && xV > 0)
+  ) {
+    player.locY -= speed * yV;
+  } else if ((player.locY < 5 && yV > 0) || (player.locY > 500 && yV < 0)) {
+    player.locX += speed * xV;
+  } else {
+    player.locX += speed * xV;
+    player.locY -= speed * yV;
+  }
+});

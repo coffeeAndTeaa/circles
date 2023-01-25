@@ -1,6 +1,9 @@
 let wHeight = $(window).height();
 let wWidth = $(window).width();
+
+// 用户端储存的数据
 let player = {};
+let orbs = [];
 
 let canvas = document.querySelector("#the-canvas");
 let context = canvas.getContext("2d");
@@ -25,5 +28,9 @@ $(".start-game").click((event) => {
   $(".modal").modal("hide");
   $(".hiddenOnStart").removeAttr("hidden");
   // 当玩家点击开始游戏后，init函数被执行
-  console.log("begin");
+  init();
 });
+
+function init() {
+  draw();
+}
