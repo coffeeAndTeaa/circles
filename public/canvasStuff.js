@@ -1,9 +1,6 @@
 // ================================
 // =============DRAWING============
 // ================================
-player.locX = Math.floor(50 * Math.random() + 200);
-player.locY = Math.floor(50 * Math.random() + 200);
-
 // draw on the screen
 function draw() {
   // 重置transform的值
@@ -42,6 +39,7 @@ function draw() {
 
 // 监听鼠标的移动
 canvas.addEventListener("mousemove", (event) => {
+  // console.log(event)
   const mousePosition = {
     x: event.clientX,
     y: event.clientY,
@@ -71,19 +69,7 @@ canvas.addEventListener("mousemove", (event) => {
     yVector = 1 - (angleDeg + 90) / 90;
   }
 
-  speed = 1;
-  xV = xVector;
-  yV = yVector;
-
-  if (
-    (player.locX < 5 && player.xVector < 0) ||
-    (player.locX > 500 && xV > 0)
-  ) {
-    player.locY -= speed * yV;
-  } else if ((player.locY < 5 && yV > 0) || (player.locY > 500 && yV < 0)) {
-    player.locX += speed * xV;
-  } else {
-    player.locX += speed * xV;
-    player.locY -= speed * yV;
-  }
+  player.xVector = xVector;
+  player.yVector = yVector;
+  // console.log(player);
 });
