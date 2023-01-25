@@ -14,3 +14,7 @@ function init() {
 socket.on("initReturn", (data) => {
   orbs = data.orbs;
 });
+
+socket.on("playerDataFromServer", (data) => {
+  players = data.players;
+});

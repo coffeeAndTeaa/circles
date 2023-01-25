@@ -17,15 +17,17 @@ function draw() {
   // translate allows us to move the canvas around
   context.translate(camX, camY);
 
-  // 绘制玩家
-  context.beginPath();
-  context.fillStyle = "rgb(0, 255, 0)";
-  context.arc(player.locX, player.locY, 19, 0, Math.PI * 2);
-  // context.arc(100, 100, 19, 0, Math.PI * 2);
-  context.fill();
-  context.lineWidth = 3;
-  context.strokeStyle = "rgb(0, 255, 0)";
-  context.stroke();
+  // 绘制所有玩家
+  players.forEach((p) => {
+    context.beginPath();
+    context.fillStyle = p.color;
+    context.arc(p.locX, p.locY, 19, 0, Math.PI * 2);
+    // context.arc(100, 100, 19, 0, Math.PI * 2);
+    context.fill();
+    context.lineWidth = 3;
+    context.strokeStyle = "rgb(0, 255, 0)";
+    context.stroke();
+  });
 
   // 绘制所有的小球
   orbs.forEach((orb) => {
