@@ -17,13 +17,13 @@ const Player = require("./classes/Player");
 
 // 游戏的基础设置
 let settings = {
-  defaultOrgs: 500,
+  defaultOrgs: 50,
   defaultSpeed: 6,
   defaultSize: 6,
   // 当一个球球变大时，zoom的值需要相应的变大
   defaultZoom: 1.5,
-  worldWidth: 1000,
-  worldHeight: 1000,
+  worldWidth: 200,
+  worldHeight: 200,
 };
 // 服务器保存的宝石信息
 let orbs = [];
@@ -39,6 +39,14 @@ function initGame() {
 
 initGame();
 
+setInterval(() => {
+  if (players.length > 0) {
+    io.to("game").emit("playerDataFromServer", {
+      players,
+    });
+  }
+}, 33);
+
 io.sockets.on("connect", (socket) => {
   let player = {};
   // 玩家已经连接到服务器了
@@ -50,10 +58,9 @@ io.sockets.on("connect", (socket) => {
     let playerData = new PlayerData(playerName, settings);
     player = new Player(socket.id, playerConfig, playerData);
     console.log(player);
-    // 每33ms发送一次玩家信息到所有连接的socket
+    // 每33ms发送当前玩家信息到客户端
     setInterval(() => {
-      io.to("game").emit("playerDataFromServer", {
-        players,
+      socket.emit("tickTock", {
         playerX: player.playerData.locX,
         playerY: player.playerData.locY,
       });
@@ -68,6 +75,7 @@ io.sockets.on("connect", (socket) => {
   });
   // 接受client发送的玩家信息
   socket.on("playerDataFromClient", (data) => {
+    // 很关键的一个条件，避免进入死循环
     if (data.xVector && data.yVector) {
       // 更新玩家的数据
       speed = player.playerConfig.speed;
@@ -76,20 +84,71 @@ io.sockets.on("connect", (socket) => {
 
       if (
         (player.playerData.locX < 5 && player.playerData.xVector < 0) ||
-        (player.playerData.locX > 500 && xV > 0)
+        (player.playerData.locX > settings.worldWidth && xV > 0)
       ) {
         player.playerData.locY -= speed * yV;
       } else if (
         (player.playerData.locY < 5 && yV > 0) ||
-        (player.playerData.locY > 500 && yV < 0)
+        (player.playerData.locY > settings.worldHeight && yV < 0)
       ) {
         player.playerData.locX += speed * xV;
       } else {
         player.playerData.locX += speed * xV;
         player.playerData.locY -= speed * yV;
       }
+      let capturedOrb = checkForOrbCollisions(
+        player.playerData,
+        player.playerConfig,
+        orbs,
+        settings
+      );
+
+      capturedOrb
+        .then((data) => {
+          // 说明玩家碰到了某块宝石
+          const orbData = {
+            orbIndex: data,
+            newOrb: orbs[data],
+          };
+          // 更新积分榜
+          io.sockets.emit("updateLeaderBoard", getLeaderBoard());
+          io.sockets.emit("orbSwitch", orbData);
+        })
+        .catch(() => {});
+
+      let playerDeath = checkForPlayerCollisions(
+        player.playerData,
+        player.playerConfig,
+        players,
+        player.socketId
+      );
+      playerDeath
+        .then((data) => {
+          // console.log("Player collision!!!")
+          // 更新积分榜
+          io.sockets.emit("updateLeaderBoard", getLeaderBoard());
+          // 发送死亡信息
+          io.sockets.emit("playerDeath", data);
+        })
+        .catch(() => {
+          // console.log("No player collision")
+        });
     }
   });
 });
+
+function getLeaderBoard() {
+  // sort players in desc order
+  players.sort((a, b) => {
+    return b.score - a.score;
+  });
+  let leaderBoard = players.map((curPlayer) => {
+    return {
+      name: curPlayer.name,
+      score: curPlayer.score,
+    };
+  });
+  return leaderBoard;
+}
 
 module.exports = io;

@@ -23,8 +23,35 @@ socket.on("initReturn", (data) => {
 });
 
 socket.on("playerDataFromServer", (data) => {
-  console.log(data);
+  // console.log(data);
   players = data.players;
+});
+
+socket.on("orbSwitch", (data) => {
+  // 更新orbs
+  orbs.splice(data.orbIndex, 1, data.newOrb);
+});
+
+socket.on("tickTock", (data) => {
   player.locX = data.playerX;
   player.locY = data.playerY;
+});
+
+socket.on("updateLeaderBoard", (data) => {
+  // console.log(data);
+  document.querySelector(".leader-board").innerHTML = "";
+  data.forEach((curPlayer) => {
+    document.querySelector(".leader-board").innerHTML += `
+          <li class="leaderboard-player">${curPlayer.name} - ${curPlayer.score}</li>
+      `;
+  });
+
+  // 更新当前玩家的分数
+  let currOne = data.find((curPlayer) => {
+    return curPlayer.name === player.name;
+  });
+
+  if (currOne) {
+    document.querySelector(".player-score").innerHTML = `${currOne.score}`;
+  }
 });
