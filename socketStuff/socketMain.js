@@ -135,6 +135,20 @@ io.sockets.on("connect", (socket) => {
         });
     }
   });
+
+  // 玩家断开连接后删除玩家
+  socket.on("disconnect", (data) => {
+    if (player.playerData) {
+      players.forEach((currPlayer, i) => {
+        // if they match...
+        if (currPlayer.uid == player.playerData.uid) {
+          // 从玩家队列中删除玩家
+          players.splice(i, 1);
+          io.sockets.emit("updateLeaderBoard", getLeaderBoard());
+        }
+      });
+    }
+  });
 });
 
 function getLeaderBoard() {
