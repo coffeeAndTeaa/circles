@@ -17,13 +17,13 @@ const Player = require("./classes/Player");
 
 // 游戏的基础设置
 let settings = {
-  defaultOrgs: 50,
+  defaultOrgs: 500,
   defaultSpeed: 6,
   defaultSize: 6,
   // 当一个球球变大时，zoom的值需要相应的变大
   defaultZoom: 1.5,
-  worldWidth: 200,
-  worldHeight: 200,
+  worldWidth: 1000,
+  worldHeight: 1000,
 };
 // 服务器保存的宝石信息
 let orbs = [];
