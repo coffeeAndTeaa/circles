@@ -1,7 +1,8 @@
 //==================================
 //========用户端的socket操作==========
 //==================================
-let socket = io.connect("http://localhost:80");
+// let socket = io.connect("http://localhost:80");
+let socket = io.connect("http://8.210.118.137:80");
 
 // 当用户点击开始游戏时调用init
 function init() {
